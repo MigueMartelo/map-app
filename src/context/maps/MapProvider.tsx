@@ -55,11 +55,17 @@ export const MapProvider = ({ children }: Props) => {
     dispatch({ type: 'SET_MAP', payload: map });
   };
 
+  const getRouteBetweenPlaces = async (
+    start: [number, number],
+    end: [number, number]
+  ) => {};
+
   return (
     <MapContext.Provider
       value={{
         ...state,
         setMap,
+        getRouteBetweenPlaces,
       }}
     >
       {children}
