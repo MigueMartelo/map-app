@@ -1,10 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useContext } from 'react';
-import { PlacesContext } from '../context';
+import { MapContext, PlacesContext } from '../context';
 import { LoadingPlaces } from '.';
+import { Feature } from '../interfaces/places';
 
 export const SearchResults = () => {
   const { places, isLoadingPlaces } = useContext(PlacesContext);
+  const { map } = useContext(MapContext);
+
+  const [activeId, setActiveId] = useState('');
+
+  const onPlaceClick = (place: Feature) => {
+    const [lng, lat] = place.center;
+    setActiveId(place.id);
+
+    map?.flyTo({
+      center: [lng, lat],
+      zoom: 14,
+    });
+  };
 
   if (isLoadingPlaces) {
     return <LoadingPlaces />;
@@ -17,12 +31,24 @@ export const SearchResults = () => {
   return (
     <ul className='list-group mt-3'>
       {places.map((place) => (
-        <li className='list-group-item list-group-item-action' key={place.id}>
+        <li
+          className={`list-group-item list-group-item-action pointer ${
+            activeId === place.id ? 'active' : ''
+          }`}
+          key={place.id}
+          onClick={() => onPlaceClick(place)}
+        >
           <h6>{place.text_es}</h6>
           <p style={{ fontSize: '12px' }} className='text-muted'>
             {place.place_name_es}
           </p>
-          <button className='btn btn-outline-primary btn-sm'>
+          <button
+            className={`btn btn-sm ${
+              activeId === place.id
+                ? 'btn-outline-light'
+                : 'btn-outline-primary'
+            }`}
+          >
             Direcciones
           </button>
         </li>
