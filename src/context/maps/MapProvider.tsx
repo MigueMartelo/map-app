@@ -3,6 +3,8 @@ import { Map, Marker, Popup } from 'mapbox-gl';
 import { MapContext } from './MapContext';
 import { mapReducer } from './mapReducer';
 import { PlacesContext } from '..';
+import { directionsApi } from '../../apis';
+import { DirectionsResponse } from '../../interfaces/directions';
 
 export interface MapState {
   isMapReady: boolean;
@@ -58,7 +60,13 @@ export const MapProvider = ({ children }: Props) => {
   const getRouteBetweenPlaces = async (
     start: [number, number],
     end: [number, number]
-  ) => {};
+  ) => {
+    const resp = await directionsApi.get<DirectionsResponse>(
+      `/${start.join(',')};${end.join(',')}`
+    );
+
+    console.log(resp);
+  };
 
   return (
     <MapContext.Provider
